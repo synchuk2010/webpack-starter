@@ -2,7 +2,7 @@ const path = require('path');
 const glob = require('glob');
 const argv = require('yargs').argv;
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isDevelopment = argv.mode === 'development';
@@ -39,7 +39,7 @@ const config = {
             plugins: [
               isProduction ? require('cssnano') : () => {},
               require('autoprefixer')({
-                browsers: ['last 2 versions']
+                overrideBrowserslist: ['last 2 versions']
               })
             ]
           }
@@ -88,14 +88,14 @@ const config = {
   ],
   optimization: isProduction ? {
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         sourceMap: true,
-        uglifyOptions: {
-          compress: {
-            inline: false,
-            drop_console: true
-          },
-        },
+        terserOptions: {
+        	compress: {
+        		inline: false,
+        		drop_console: true
+        	},
+        }
       }),
     ],
   } : {},
